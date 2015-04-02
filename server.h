@@ -48,6 +48,8 @@ public:
 	   nullptr if a new client wishes to communicate */
 	std::shared_ptr<Connection> waitForActivity() const;
 	
+	// testkommentar
+
 	/* Registers a new connection */
 	void registerConnection(const std::shared_ptr<Connection>& conn);
 	
