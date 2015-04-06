@@ -15,7 +15,7 @@ public:
 	iterator cend() {return database.cend()};
 		
 	//check if newsgroup is unique, then add to db implementation. Return success.
-	bool add_newsgroup(Newsgroup) override;
+	bool add_newsgroup(string) override;
 	
 	//check if newsgroup exists, then delete. Return success.
 	bool delete_newsgroup(unsigned int) override;
@@ -31,7 +31,7 @@ public:
 	bool delete_article(unsigned int, unsigned int) override ;
 	
 private:
-	std::set<Newsgroup> database;
+	std::map<unsigned int,Newsgroup> database;
 	unsigned int groupnumber;
 }
 #endif
