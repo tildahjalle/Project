@@ -2,24 +2,25 @@
 #ifndef ____NewsGroup__
 #define ____NewsGroup__
 
-#include <stdio.h>
+#include <string>
+#include <map>
 #include "Article.h"
 
 class NewsGroup {
 
 public:
-    NewsGroup(std::string, unsigned int);
+    NewsGroup(std::string);
     
-    std::string getName() const;
-    unsigned int getId() const;
+    std::string get_name() const;
+    //unsigned int getId() const;
     
-    Article getArticle(unsigned int) const;
-    std::vector<Article> getArticles() const;
-    bool createArticle(std::string, std::string, std::string);
-    bool deleteArticle(unsigned int);
+    Article get_article(unsigned int) const;
+    std::map<int,Article> get_articles() const;
+    bool add_article(Article a);
+    bool delete_article(unsigned int);
     
 private:
-    std::vector<Article> articles;
+    std::map<int,Article> articles;
     std::string name;
     unsigned int id;
     unsigned int count;

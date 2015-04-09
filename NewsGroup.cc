@@ -1,45 +1,52 @@
 
 #include "NewsGroup.h"
-#include <stdio.h>
+#include <string>
+#include <vector>
+
 
 using namespace std;
 
 
-NewsGroup::(string n, unsigned int nbr): name(n),id(nbr) {}
+NewsGroup::(string n): name(n) {}
 
-string NewsGroup::getName() const { return name; }
+string NewsGroup::get_name() const { return name; }
 
-unsigned int NewsGroup::getId() const { return id; }
+//unsigned int NewsGroup::getId() const { return id; }
 
-Article NewsGroup::getArticle(unsigned int nbr) {
-    for (size_t k = 0; k < articles.size(); ++k) {
+Article NewsGroup::get_article(unsigned int nbr) {
+    return articles.at(nbr);
+    
+    /*for (size_t k = 0; k < articles.size(); ++k) {
         if (articles.at(k).getId() == nbr) {
             return articles.at(k);
         }
     }
-    return nullptr;
+    return nullptr;*/
 }
 
-vector<Article> getArticles() const {
+vector<Article> get_Articles() const {
     
     return articles;
     
 }
 
-bool NewsGroup::createArticle(string name,string title,string txt) {
+bool NewsGroup::add_article(Article a) {
     // when will this return false?
-    articles.push_back(Article(name,title,txt,count));
-    count += count;
+    //articles.push_back(a);
+    articles.insert(count,a);
+    count += 1;
     return true;
 }
 
-bool NewsGroup::deleteArticle(unsigned int nbr){
-    for (size_t k = 0; k < articles.size(); ++k) {
+bool NewsGroup::delete_article(unsigned int nbr){
+    return articles.erase(nbr) == 1;
+    
+    /*for (size_t k = 0; k < articles.size(); ++k) {
         if (articles.at(k).getId() == nbr) {
             articles.erase(k);
             return true;
         }
-    }
+    }*/
     return false;
 }
 
