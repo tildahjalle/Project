@@ -30,11 +30,12 @@ Message::Message(const Connection& conn){
 	}
 }
 
-Message::Message(char newcommand, std::vector<int> ints = nullptr, 
+Message::Message(char newcommand, char newack = 0; std::vector<int> ints = nullptr, 
 											vector<string> strs = nullptr) 
 : 	command(newcommand)
 ,	intargs(ints)
 ,	stringargs(strs); {}
+,	ack(newack);
  
 void Message::transmit(const Connection& conn){
 	//send the command
