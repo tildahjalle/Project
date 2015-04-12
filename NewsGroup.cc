@@ -24,9 +24,15 @@ Article NewsGroup::get_article(unsigned int nbr) const {
     return nullptr;*/
 }
 
+<<<<<<< HEAD
 vector<Article> NewsGroup::get_articles() const {
   //kvar att implementera, gör en dummy för att det ska kompilera
   return vector<Article>();
+=======
+map<int,Article> get_articles() const {
+    
+    return articles;
+>>>>>>> 5848a3ce469c49c51727f2281a60bbeb911839e2
     
 }
 
