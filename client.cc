@@ -50,7 +50,48 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	
-	cout << "Type a number: ";
+	cout << "Welcome, you can use commands to list, create or delete newsgroups. Write exit to terminate program.";
+	//Om man väljer ett, jämföra strängar, cin >> choice if(choice == blabla) gör det är alternativet. 
+	
+	string str;
+	while(cin >> str){
+	  try{
+	    if(str == "list"){
+	      //lista alla newsgroups
+	      cout << "To create, delete and read articles, list the articles in the newsgroup you wish to alter. Write exit to terminate the program.";
+	      cin >> str;
+	      if(str == "list"){
+		cin >> str;
+		//lista alla articles i str newsgroup. Kolla om newsgroup finns annars exception..
+		string ngroup = str; 
+		while(cin >> str){
+		  if(str == "create"){
+
+		  }else if(str == "delete"){
+		  }else if(str == "read" ){
+		  }else if(str == "exit"){
+		  }else{
+		    //exception finns inget sådant kommando, terminate.
+		  }
+		}
+	      }else if(str == "exit"){
+	      }
+	      //här måste man också kunna lista artiklar i en specifik newsgroup. När man har gjort det kan man create, delete och read artiklar. Måste därför spara undan vilken newsgroup det är.
+	    }else if (str == "create"){
+	      
+	      
+	    }else if (str == "delete"){
+
+	    }else if (str == "exit"){
+	      
+	      
+	    }else{
+	      //kan inte använda det kommandot här, skriv ut en hjälplista eller liknande..
+	    }
+	  }catch(){
+	  }
+	}
+
 	int nbr;
 	while (cin >> nbr) {
 		try {
