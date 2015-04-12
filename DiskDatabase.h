@@ -34,7 +34,7 @@ public:
     bool delete_article(unsigned int, unsigned int) override;
     
 private:
-    std::map<unsigned int, NewsGroup> database;
+    //std::map<unsigned int, NewsGroup> database;
     unsigned int groupnbr;
     std::string root;
     
