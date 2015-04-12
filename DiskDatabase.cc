@@ -177,6 +177,88 @@ bool DiskDatabase::delete_article(unsigned int ng_nbr, unsigned int a_nbr) {
     
 }
 
+vector<pair<int,string>> DiskDatabase::list_newsgroup(){
+    string path = root + "/";
+    auto dir = opendir(path.c_str());
+    vector<pair<int,string>> ngs;
+    if (dir == nullptr) {
+        return ngs;
+    }
+    auto entry = readdir(dir);
+    while (entry != nullptr) {
+        try {
+            string id = entry->d_name;
+            auto pos = id.find_first_of(" ");
+            int ng_id = stoi(id.substr(0,pos));
+            string name = id.substr(pos+1,string::npos);
+            pair<int,string> p;
+            p.first = ng_id;
+            p.second = name;
+            ngs.push_back(p);
+            
+        } catch (invalid_argument e) {
+            cerr << "Something is wrong with the folders" << endl;
+        }
+        entry = readdir(dir);
+    }
+    closedir(dir);
+    return ngs;
+}
+
+vector<pair<int,string>> DiskDatabase::list_articles(unsigned int ng_nbr) {
+    string path = root + "/";
+    vector<pair<int,string>> a_list;
+    string ng_path;
+    bool exists = false;
+    auto dir = opendir(path.c_str());
+    if (dir == nullptr) {
+        return a_list;
+    }
+    auto entry = readdir(dir);
+    while (entry != nullptr) {
+        try {
+            string id = entry->d_name;
+            auto pos = id.find_first_of(" ");
+            unsigned int ng_id = stoi(id.substr(0,pos));
+            if (ng_id == ng_nbr) {
+                ng_path = path + id + "/";
+            }
+        } catch (invalid_argument e) {
+            cerr << "Something is wrong with the folders" << endl;
+        }
+        entry = readdir(dir);
+    }
+    closedir(dir);
+    if (exists) {
+        auto ng_dir = opendir(ng_path.c_str());
+        if (ng_dir == nullptr) {
+            return a_list;
+        }
+        entry = readdir(ng_dir);
+        while (entry != nullptr) {
+            try {
+                string a_id = entry->d_name;
+                auto pos = a_id.find_first_of(" ");
+                int a_nbr = stoi(a_id.substr(0,pos));
+                auto end_pos = a_id.find(".txt");
+                string art_name = a_id.substr(pos+1,end_pos-1);
+                pair<int,string> p;
+                p.first = a_nbr;
+                p.second = art_name;
+                a_list.push_back(p);
+            } catch (invalid_argument e) {
+                cerr << "Something is wrong with the folders" << endl;
+            }
+            entry = readdir(ng_dir);
+        }
+        closedir(ng_dir);
+    }
+    return a_list;
+    
+}
+
+
+
 
 
 

@@ -33,6 +33,12 @@ public:
     //Delete article
     bool delete_article(unsigned int, unsigned int) override;
     
+    //List NewGroups
+    std::vector<std::pair<int,std::string>> list_newsgroup();
+    
+    //List Articles in a specific Newsgroup
+    std::vector<std::pair<int,std::string>> list_articles(unsigned int);
+    
 private:
     //std::map<unsigned int, NewsGroup> database;
     unsigned int groupnbr;

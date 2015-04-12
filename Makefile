@@ -16,7 +16,7 @@ CXXFLAGS += -g
 #CXXFLAGS =  -stdlib=libc++
 #CPPFLAGS =  -stdlib=libc++
 #CXXFLAGS += -stdlib=libc++
-PROGS = libclientserver.a DiskServer #MemoryServer
+PROGS = libclientserver.a DiskServer MemoryServer
 
 all: $(PROGS)
 
@@ -30,7 +30,7 @@ libclientserver.a: connection.o server.o
 
 #MemoryServer: NewsGroup.o MemoryDatabase.o libclientserver.a
 
-ServerDatabase: NewsGroup.o DiskDatabase.o libclientserver.a
+DiskServer: NewsGroup.o DiskDatabase.o libclientserver.a
 
 # Phony targets
 .PHONY: all clean

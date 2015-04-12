@@ -4,6 +4,7 @@
 #include "server.h"
 #include "protocol.h"
 #include <stdexcept>
+#include "ConnectionClosedException.h"
 
 using namespace std;
 using p = Protocol;
@@ -23,41 +24,52 @@ int main(int argc, char* argv[]){
 			  switch (message.command){
 			  case p::COM_LIST_NG:
 			    //skapa en lista på lämpligt vis, skapa ett message av detta, transmitta det.
-			  for(auto s = database.cbegin(); s != database.cend(); s++){
-			    intargs.push_back(s->first);
-			    stringargs.push_back(s->second.get_name());
-			  }
-			  Message(p::ANS_LIST_NG, 0, intargs, stringargs).transmit(*conn);
-				break;
+                      vector<pair<int,string>> ngs = database.list_newsgroup();
+                      
+                      for (pair<int,string> pa:ngs) {
+                          intargs.push_back(pa.first);
+                          stringargs.push_back(pa.second);
+                      }
+                      
+                      /*for(auto s = database.cbegin(); s != database.cend(); s++){
+                       intargs.push_back(s->first);
+                       stringargs.push_back(s->second.get_name());
+                       }*/
+                      Message(p::ANS_LIST_NG, 0, intargs, stringargs).transmit(*conn);
+                      break;
 			  case p::COM_CREATE_NG:
-			    if(database.add_newsgroup(message.stringargs[0])){
-			      Message(p::ANS_CREATE_NG,p::ANS_ACK).transmit(*conn);
-			    }else{
-			      intargs.push_back(p::ERR_NG_ALREADY_EXISTS);
-					Message(p::ANS_CREATE_NG, p::ANS_NAK, intargs).transmit(*conn);
-			    }
-			    break;
+                      if(database.add_newsgroup(message.stringargs[0])){
+                          Message(p::ANS_CREATE_NG,p::ANS_ACK).transmit(*conn);
+                      }else{
+                          intargs.push_back(p::ERR_NG_ALREADY_EXISTS);
+                          Message(p::ANS_CREATE_NG, p::ANS_NAK, intargs).transmit(*conn);
+                      }
+                      break;
 			  case p::COM_DELETE_NG:
-			    if(database.delete_newsgroup(message.intargs[0])){
-			      Message(p::ANS_DELETE_NG, p::ANS_ACK).transmit(*conn);
-			    }else{
-			      intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
-			      Message(p::ANS_DELETE_NG, p::ANS_NAK, intargs).transmit(*conn);
-			    }
-			    break;
+                      if(database.delete_newsgroup(message.intargs[0])){
+                          Message(p::ANS_DELETE_NG, p::ANS_ACK).transmit(*conn);
+                      }else{
+                          intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
+                          Message(p::ANS_DELETE_NG, p::ANS_NAK, intargs).transmit(*conn);
+                      }
+                      break;
 			  case p::COM_LIST_ART:
-			    if(database.get_newsgroup(message.intargs[0]) != nullptr){
-			      for(auto article : database.get_newsgroup(message.intargs[0])){
-				  intargs.push_back(article.first);
-				  stringargs.push_back(article.second);
-					}
-				    Message(p::ANS_LIST_ART, p::ANS_ACK, intargs,stringargs).transmit(*conn);
-				  } else{
-			      intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
-				  Message(p::ANS_LIST_ART, p::ANS_NAK, intargs).transmit(*conn);					
-				}
-			      break;
-			      
+                      if(database.get_newsgroup(message.intargs[0]) != nullptr){
+                          vector<pair<int,string>> arts = database.list_articles(message.intargs[0]);
+                          for (pair<int,string> pa:arts) {
+                            intargs.push_back(pa.first);
+                            stringargs.push_back(pa.second);
+                          }
+                          /*for(auto article : database.get_newsgroup(message.intargs[0])){
+                           intargs.push_back(article.first);
+                           stringargs.push_back(article.second);
+                           }*/
+                          Message(p::ANS_LIST_ART, p::ANS_ACK, intargs,stringargs).transmit(*conn);
+                      }else{
+                          intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
+                          Message(p::ANS_LIST_ART, p::ANS_NAK, intargs).transmit(*conn);
+                      }
+                      break;
 			    case p::COM_CREATE_ART:
 			      //Var skapas artiklar?
 			    case p::COM_GET_ART:
