@@ -96,11 +96,13 @@ bool DiskDatabase::delete_newsgroup(unsigned int id_nbr){
 
 //get reference to group for listing of articles. Read only.
 //returns nullptr if group doesn't exists
-const NewsGroup& DiskDatabase::get_newsgroup(unsigned int id_nbr) const{
+/*const*/ pair<bool,NewsGroup>/*&*/ DiskDatabase::get_newsgroup(unsigned int id_nbr) const{
+    pair<bool,NewsGroup> p;
+    p.first = false;
     string path = root + "/";
     auto dir = opendir(path.c_str());
     if (dir == nullptr) {
-        return nullptr;
+        return p;
     }
     auto entry = readdir(dir);
     while (entry != nullptr) {
@@ -110,7 +112,9 @@ const NewsGroup& DiskDatabase::get_newsgroup(unsigned int id_nbr) const{
             unsigned int ng_id = stoi(id.substr(0,pos));
             if (ng_id == id_nbr) {
                 string ng_name = id.substr(pos+1,string::npos);
-                return NewsGroup(ng_name);
+                p.second = NewsGroup(ng_name);
+                p.first = true;
+                return p;
             }
         } catch (invalid_argument e) {
             cerr << "Something is wrong with the folders" << endl;
@@ -118,13 +122,14 @@ const NewsGroup& DiskDatabase::get_newsgroup(unsigned int id_nbr) const{
         entry = readdir(dir);
     }
     closedir(dir);
-    return nullptr;
+    return p;
 }
 
 //Adds Article to group nbr int. Return success.
 bool DiskDatabase::add_article(unsigned int nbr, const Article& a) {
-    NewsGroup ng = get_newsgroup(nbr);
-    if (ng == nullptr) {
+    pair<bool, NewsGroup> p = get_newsgroup(nbr);
+    NewsGroup ng = p.second;
+    if (p.first == false) {
         return false;
     }
     string path = root + "/"+ to_string(nbr) + ng.get_name();
@@ -149,8 +154,9 @@ bool DiskDatabase::add_article(unsigned int nbr, const Article& a) {
 
 //Delete article
 bool DiskDatabase::delete_article(unsigned int ng_nbr, unsigned int a_nbr) {
-    NewsGroup ng = get_newsgroup(ng_nbr);
-    if (ng == nullptr) {
+    pair<bool, NewsGroup> p =get_newsgroup(ng_nbr);
+    NewsGroup ng = p.second;
+    if (p.first == false) {
         return false;
     }
     string ng_path = root + "/"+ to_string(ng_nbr) + ng.get_name();

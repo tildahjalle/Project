@@ -25,7 +25,7 @@ public:
     
     //get reference to group for listing of articles. Read only.
     //returns nullptr if group doesn't exists
-    const NewsGroup& get_newsgroup(unsigned int) const override;
+    /*const*/ std::pair<bool,NewsGroup>/*&*/ get_newsgroup(unsigned int) const override;
     
     //Adds Article to group nbr int. Return success.
     bool add_article(unsigned int, const Article&) override;

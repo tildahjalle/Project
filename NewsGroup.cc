@@ -6,15 +6,21 @@
 
 using namespace std;
 
-
+NewsGroup::NewsGroup() {};
 NewsGroup::NewsGroup(string n): name(n) {}
 
 string NewsGroup::get_name() const { return name; }
 
 //unsigned int NewsGroup::getId() const { return id; }
 
-Article NewsGroup::get_article(unsigned int nbr) const {
-    return articles.at(nbr);
+pair<bool,Article> NewsGroup::get_article(unsigned int nbr) const {
+    pair<bool,Article> p;
+    p.first = false;
+    if (articles.find(nbr) != articles.end()) {
+        p.first = true;
+    }
+    p.second = articles.at(nbr);
+    return p;
     
     /*for (size_t k = 0; k < articles.size(); ++k) {
         if (articles.at(k).getId() == nbr) {

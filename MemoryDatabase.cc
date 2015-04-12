@@ -1,4 +1,6 @@
 #include "MemoryDatabase.h"
+#include <string>
+#include <vector>
 
 
 //constructor
@@ -14,8 +16,12 @@ bool MemoryDatabase::delete_newsgroup(unsigned int groupnbr){
 	return database.erase(groupnbr) == 1;
 }
 
-const NewsGroup& MemoryDatabase::get_newsgroup(unsigned int groupnbr) const{
-	return database.at(groupnbr);
+/*const*/ std::pair<bool,NewsGroup>/*&*/ MemoryDatabase::get_newsgroup(unsigned int groupnbr) const{
+    std::pair<bool,NewsGroup> p(false,database.at(groupnbr));
+    if (database.find(groupnbr) != database.end()) {
+        p.first = true;
+    }
+    return p;
 }
 
 bool MemoryDatabase::add_article(unsigned int groupnbr, const Article& a){

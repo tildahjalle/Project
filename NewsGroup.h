@@ -10,12 +10,13 @@
 class NewsGroup {
 
 public:
+    NewsGroup();
     NewsGroup(std::string);
     
     std::string get_name() const;
     //unsigned int getId() const;
     
-    Article get_article(unsigned int) const;
+    std::pair<bool,Article> get_article(unsigned int) const;
     std::vector<Article> get_articles() const;
     bool add_article(Article a);
     bool delete_article(unsigned int);
@@ -23,7 +24,7 @@ public:
 private:
     std::map<int,Article> articles;
     std::string name;
-    unsigned int id;
+    //unsigned int id;
     unsigned int count;
     
 };

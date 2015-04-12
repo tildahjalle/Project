@@ -25,7 +25,7 @@ public:
 	
 	//get reference to group for listing of articles. Read only.
 	//returns nullptr if group doesn't exists
-	virtual const NewsGroup& get_newsgroup(unsigned int) const;
+    virtual /*const*/ std::pair<bool,NewsGroup>/*&*/ get_newsgroup(unsigned int) const;
 	
 	//Adds Article to group nbr int. Return success.
 	virtual bool add_article(unsigned int, const Article&);

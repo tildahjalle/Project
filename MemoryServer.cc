@@ -3,6 +3,7 @@
 #include "message.h"
 #include "server.h"
 #include "protocol.h"
+#include "ConnectionClosedException.h"
 #include <stdexcept>
 
 using namespace std;
@@ -46,10 +47,14 @@ int main(int argc, char* argv[]){
 			    }
 			    break;
 			  case p::COM_LIST_ART:
-			    if(database.get_newsgroup(message.intargs[0]) != nullptr){
-			      for(auto article : database.get_newsgroup(message.intargs[0])){
-				  intargs.push_back(article.first);
-				  stringargs.push_back(article.second);
+			    if(database.get_newsgroup(message.intargs[0]).first != false){
+                    int count = 0;
+			      for(auto article : database.get_newsgroup(message.intargs[0]).second.get_articles()){
+                      intargs.push_back(count);
+                      stringargs.push_back(article.getTitle());
+                      stringargs.push_back(article.getAuthor());
+                      stringargs.push_back(article.getText());
+                      ++count;
 					}
 				    Message(p::ANS_LIST_ART, p::ANS_ACK, intargs,stringargs).transmit(*conn);
 				  } else{
@@ -62,16 +67,16 @@ int main(int argc, char* argv[]){
 			      //Var skapas artiklar?
 			    case p::COM_GET_ART:
 			      //Group does not exist
-			      if(database.get_newsgroup(message.intargs[0]) == nullptr){
+			      if(database.get_newsgroup(message.intargs[0]).first == false){
 				intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
 					Message(p::ANS_GET_ART, p::ANS_NAK, intargs).transmit(*conn);	
 					//Article does not exist
-			      }else if(database.get_newsgroup(message.intargs[0]).get_article(message.intargs[1])==nullptr){
+			      }else if(database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).first==false){
 				intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
 				Message(p::ANS_GET_ART, p::ANS_NAK, intargs).transmit(*conn);	
 				//All is well
 			      } else{
-				Article a = database.get_newsgroup(message.intargs[0]).get_article(message.intargs[1]);
+				Article a = database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).second;
 				stringargs.push_back(a.getTitle());
 				stringargs.push_back(a.getAuthor());
 				stringargs.push_back(a.getText());
