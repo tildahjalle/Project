@@ -24,7 +24,7 @@ Article NewsGroup::get_article(unsigned int nbr) {
     return nullptr;*/
 }
 
-vector<Article> get_articles() const {
+map<int,Article> get_articles() const {
     
     return articles;
     
