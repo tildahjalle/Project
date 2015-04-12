@@ -41,7 +41,7 @@ int main(int argc, char* argv[]){
 			    if(database.delete_newsgroup(message.intargs[0])){
 			      Message(p::ANS_DELETE_NG, p::ANS_ACK).transmit(*conn);
 			    }else{
-			      intargs.push_back(p::ERR_NG_DOES_NOT_EXISTS);
+			      intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
 			      Message(p::ANS_DELETE_NG, p::ANS_NAK, intargs).transmit(*conn);
 			    }
 			    break;

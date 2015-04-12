@@ -7,6 +7,7 @@
 #include "Article.h"
 #include "NewsGroup.h"
 
+
 class Database{
 public:
 	//constructor

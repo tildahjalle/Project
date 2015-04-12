@@ -1,0 +1,1 @@
+DiskDatabase.o: DiskDatabase.cc DiskDatabase.h article.h newsgroup.h
