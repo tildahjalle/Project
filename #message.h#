@@ -7,10 +7,10 @@ public:
 //connection (message reading) constructor
 	Message(const Connection&);
 	//command list constructor (message writing)
-	Message(char, char=0, std::vector<int> = std::vector<int>(), std::vector<std::string> = std::vector<std::string>());
+	Message(char, char=0; std::vector<int> = nullptr, std::vector<std::String> = nullptr);
 	void transmit(const Connection&);
 	
-	char command, ack;
+	char command ack;
 	std::vector<std::string> stringargs;
 	std::vector<int> intargs;
 		
@@ -19,5 +19,6 @@ public:
 	void writeNbr(const Connection&, int);
 	std::string readString(const Connection&,int);
 	void writeString(const Connection&,std::string);
-};
+}
+
 #endif

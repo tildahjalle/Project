@@ -3,22 +3,22 @@
 
 //constructor
 
-MemoryDatabase::MemoryDatabase() : groupnumber(0);
+MemoryDatabase::MemoryDatabase() : groupnumber(0){};
 
-bool MemoryDatabase::add_newsgroup(string title){
+bool MemoryDatabase::add_newsgroup(std::string title){
 	groupnumber++;
-	return ((database.insert(Newsgroup(title))->second);	
+	return ((database.emplace(groupnumber,NewsGroup(title))).second);	
 }
 
 bool MemoryDatabase::delete_newsgroup(unsigned int groupnbr){
-	return database.erase(nbr) == 1;
+	return database.erase(groupnbr) == 1;
 }
 
-Newsgroup& MemoryDatabase::get_newsgroup(unsigned int groupnbr) const{
+const NewsGroup& MemoryDatabase::get_newsgroup(unsigned int groupnbr) const{
 	return database.at(groupnbr);
 }
 
-bool MemoryDatabase::add_article(unsigned int group, const Article& a){
+bool MemoryDatabase::add_article(unsigned int groupnbr, const Article& a){
 	return database.at(groupnbr).add_article(a);
 }
 

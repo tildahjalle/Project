@@ -4,8 +4,8 @@
 #
 # Define the compiler. g++ can be
 # changed to clang++.
-CXX = g++
-CC  = g++
+CXX = clang++
+CC  = clang++
 
 # Define preprocessor, compiler, and linker flags. Uncomment the # lines
 # if you use clang++ and wish to use libc++ instead of libstdc++.
@@ -16,15 +16,19 @@ CXXFLAGS += -g
 #CXXFLAGS =  -stdlib=libc++
 #CPPFLAGS =  -stdlib=libc++
 #CXXFLAGS += -stdlib=libc++
+PROGS = libclientserver.a MemoryServer
 
-all: libclientserver.a
+all: $(PROGS)
+
 
 # Create the library; ranlib is for Darwin (OS X) and maybe other systems.
 # Doesn't seem to do any damage on other systems.
 
-libclientserver.a: connection.o server.o
+libclientserver.a: connection.o server.o 
 	ar rv libclientserver.a  connection.o server.o
 	ranlib libclientserver.a
+
+MemoryServer: NewsGroup.o MemoryDatabase.o libclientserver.a
 
 # Phony targets
 .PHONY: all clean

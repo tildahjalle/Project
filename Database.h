@@ -2,10 +2,10 @@
 #define	DATABASE_H
 
 #include <iostream>
-#include <ifstream>
+#include <fstream>
 #include <string>
-#include "article.h"
-#include "newsgroup.h"
+#include "Article.h"
+#include "NewsGroup.h"
 
 class Database{
 public:
@@ -13,23 +13,23 @@ public:
 	Database();
 	
 	//Returns const iterators.
-	iterator cbegin() virtual;
-	iterator cend() virtual;
+	//std::iterator cbegin() virtual;
+	//std::iterator cend() virtual;
 		
 	//check if newsgroup is unique, then add to db implementation. Return success.
-	bool add_newsgroup(Newsgroup) virtual;
+	virtual	bool add_newsgroup(std::string); 
 	
 	//check if newsgroup exists, then delete. Return success.
-	bool delete_newsgroup(unsigned int) virtual;
+	virtual bool delete_newsgroup(unsigned int);
 	
 	//get reference to group for listing of articles. Read only.
 	//returns nullptr if group doesn't exists
-	Newsgroup& get_newsgroup(unsigned int) const virtual;
+	virtual const NewsGroup& get_newsgroup(unsigned int) const;
 	
 	//Adds Article to group nbr int. Return success.
-	bool add_article(unsigned int, Article) virtual;
+	virtual bool add_article(unsigned int, const Article&);
 	
 	//Delete article 
-	bool delete_article(unsigned int, unsigned int) virtual;
-	}
+	virtual bool delete_article(unsigned int, unsigned int);
+};
 #endif

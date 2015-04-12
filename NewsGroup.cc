@@ -7,13 +7,13 @@
 using namespace std;
 
 
-NewsGroup::(string n): name(n) {}
+NewsGroup::NewsGroup(string n): name(n) {}
 
 string NewsGroup::get_name() const { return name; }
 
 //unsigned int NewsGroup::getId() const { return id; }
 
-Article NewsGroup::get_article(unsigned int nbr) {
+Article NewsGroup::get_article(unsigned int nbr) const {
     return articles.at(nbr);
     
     /*for (size_t k = 0; k < articles.size(); ++k) {
@@ -24,16 +24,16 @@ Article NewsGroup::get_article(unsigned int nbr) {
     return nullptr;*/
 }
 
-vector<Article> get_articles() const {
-    
-    return articles;
+vector<Article> NewsGroup::get_articles() const {
+  //kvar att implementera, gör en dummy för att det ska kompilera
+  return vector<Article>();
     
 }
 
 bool NewsGroup::add_article(Article a) {
     // when will this return false?
     //articles.push_back(a);
-    articles.insert(count,a);
+    articles.emplace(count,a);
     count += 1;
     return true;
 }
