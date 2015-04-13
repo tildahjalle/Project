@@ -83,7 +83,7 @@ bool DiskDatabase::delete_newsgroup(unsigned int id_nbr){
             auto pos = id.find_first_of(" ");
             unsigned int ng_id = stoi(id.substr(0,pos));
             if (ng_id == id_nbr) {
-                return remove((path + id).c_str());
+                return remove((path + id).c_str()) == 0;
             }
         } catch (invalid_argument e) {
             cerr << "Something is wrong with the folders" << endl;
@@ -112,9 +112,13 @@ bool DiskDatabase::delete_newsgroup(unsigned int id_nbr){
             unsigned int ng_id = stoi(id.substr(0,pos));
             if (ng_id == id_nbr) {
                 string ng_name = id.substr(pos+1,string::npos);
-                p.second = NewsGroup(ng_name);
+                /*p.second = NewsGroup(ng_name); //loopa igen alla newsGroup
+                vector<pair<int,string>> arts = list_articles(ng_id);
+                for (pair p:arts) {
+                    p.second.add_article(p.second);
+                }
                 p.first = true;
-                return p;
+                return p;*/
             }
         } catch (invalid_argument e) {
             cerr << "Something is wrong with the folders" << endl;
@@ -132,7 +136,7 @@ bool DiskDatabase::add_article(unsigned int nbr, const Article& a) {
     if (p.first == false) {
         return false;
     }
-    string path = root + "/"+ to_string(nbr) + ng.get_name();
+    string path = root + "/"+ to_string(nbr) + " "+ ng.get_name();
     unsigned int nbr_of_a = 0;
     auto dir = opendir(path.c_str());
     if (dir == nullptr) {
@@ -140,11 +144,23 @@ bool DiskDatabase::add_article(unsigned int nbr, const Article& a) {
     }
     auto entry = readdir(dir);
     while (entry != nullptr) {
-        ++nbr_of_a;
+        try {
+            string id = entry->d_name;
+            //cout<<id<<endl;
+            auto pos = id.find_first_of(" ");
+            unsigned int id_nbr = stoi(id.substr(0,pos));
+            if (id_nbr > groupnbr) {
+                nbr_of_a = id_nbr;
+            }
+            
+        } catch (invalid_argument e) {
+            cerr << "Something is wrong with the folders" << endl;
+        }
         entry = readdir(dir);
     }
+    ++nbr_of_a;
     closedir(dir);
-    ofstream file(path + to_string(++nbr_of_a) + a.getTitle() + ".txt");
+    ofstream file(/*path + */to_string(nbr_of_a) +" "+ a.getTitle() + ".txt");
     file << a.getAuthor() << '\n';
     file << a.getText();
     file.close();
@@ -159,7 +175,7 @@ bool DiskDatabase::delete_article(unsigned int ng_nbr, unsigned int a_nbr) {
     if (p.first == false) {
         return false;
     }
-    string ng_path = root + "/"+ to_string(ng_nbr) + ng.get_name();
+    string ng_path = root + "/"+ to_string(ng_nbr) +" "+ ng.get_name();
     auto dir = opendir(ng_path.c_str());
     if (dir == nullptr) {
         return false;
@@ -171,7 +187,7 @@ bool DiskDatabase::delete_article(unsigned int ng_nbr, unsigned int a_nbr) {
             auto pos = id.find_first_of(" ");
             unsigned int a_id = stoi(id.substr(0,pos));
             if (a_id == a_nbr) {
-                return remove((ng_path + id).c_str()) == 0;
+                return remove((/*ng_path + */id).c_str()) == 0;
             }
         } catch (invalid_argument e) {
             cerr << "Something is wrong with the folders" << endl;

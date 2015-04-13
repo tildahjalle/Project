@@ -1,5 +1,6 @@
 #include "connection.h"
 #include "connectionclosedexception.h"
+#include "protocol.h"
 
 #include <iostream>
 #include <string>
@@ -57,10 +58,14 @@ int main(int argc, char* argv[]) {
 	while(cin >> str){
 	  try{
 	    if(str == "list"){
+            Message(Protocol::COM_LIST_NG).transmit(*conn); //hur löser man det i message
 	      //lista alla newsgroups
 	      cout << "To create, delete and read articles, list the articles in the newsgroup you wish to alter. Write exit to terminate the program.";
 	      cin >> str;
 	      if(str == "list"){
+              cin >> str;
+              Message(Protocol::COM_LIST_ART,str).transmit(*conn);
+              
 		cin >> str;
 		//lista alla articles i str newsgroup. Kolla om newsgroup finns annars exception..
 		string ngroup = str; 

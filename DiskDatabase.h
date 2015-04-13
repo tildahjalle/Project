@@ -42,7 +42,7 @@ public:
 private:
     //std::map<unsigned int, NewsGroup> database;
     unsigned int groupnbr;
-    std::string root;
+    std::string root = "database";
     
     
 };

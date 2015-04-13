@@ -28,9 +28,9 @@ libclientserver.a: connection.o server.o
 	ar rv libclientserver.a  connection.o server.o
 	ranlib libclientserver.a
 
-#MemoryServer: NewsGroup.o MemoryDatabase.o libclientserver.a Article.o
+#MemoryServer: NewsGroup.o MemoryDatabase.o libclientserver.a Article.o message.o
 
-DiskServer: NewsGroup.o DiskDatabase.o libclientserver.a Article.o
+DiskServer: NewsGroup.o DiskDatabase.o libclientserver.a Article.o message.o
 
 # Phony targets
 .PHONY: all clean

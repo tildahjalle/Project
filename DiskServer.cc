@@ -41,10 +41,10 @@ int main(int argc, char* argv[]){
                   break;
 			  case p::COM_CREATE_NG:
                   if(database.add_newsgroup(message.stringargs[0])){
-                      Message(p::ANS_CREATE_NG,p::ANS_ACK).transmit(*conn);
+                      Message(p::ANS_CREATE_NG,p::ANS_ACK, intargs, stringargs).transmit(*conn);
                   }else{
                       intargs.push_back(p::ERR_NG_ALREADY_EXISTS);
-                      Message(p::ANS_CREATE_NG, p::ANS_NAK, intargs).transmit(*conn);
+                      Message(p::ANS_CREATE_NG, p::ANS_NAK, intargs, stringargs).transmit(*conn);
                   }
                   break;
 			  case p::COM_DELETE_NG:
@@ -89,7 +89,9 @@ int main(int argc, char* argv[]){
 				stringargs.push_back(a.getTitle());
 				stringargs.push_back(a.getAuthor());
 				stringargs.push_back(a.getText());
+                      Message(p::ANS_GET_ART, p::ANS_NAK, intargs,stringargs).transmit(*conn);
 			      }
+                  
 			      break;
 			    }
 			  
