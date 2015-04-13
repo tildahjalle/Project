@@ -11,8 +11,26 @@ using p = Protocol;
 
 int main(int argc, char* argv[]){
   //skapa server med invariabel som port. felhantering!
-  Server server(*argv[1]);
-  auto database = DiskDatabase();
+    if (argc != 2) {
+        cerr << "Usage: myserver port-number" << endl;
+        exit(1);
+    }
+    
+    int port = -1;
+    try {
+        port = stoi(argv[1]);
+    } catch (exception& e) {
+        cerr << "Wrong port number. " << e.what() << endl;
+        exit(1);
+    }
+    
+    Server server(port);
+    if (!server.isReady()) {
+        cerr << "Server initialization error." << endl;
+        exit(1);
+    }
+
+    auto database = DiskDatabase();
   
   while (true) {
     auto conn = server.waitForActivity();

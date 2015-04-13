@@ -14,10 +14,10 @@
 using namespace std;
 
 DiskDatabase::DiskDatabase(){
-    string path = root +"/";
-    auto dir = opendir(path.c_str());
+    /*string path = root +"/";*/
+    auto dir = opendir(root.c_str());
     groupnbr = 0;
-    if (dir == nullptr) {
+    if (dir == NULL) {
         mkdir(root.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     } else {
         auto entry = readdir(dir);
@@ -32,7 +32,7 @@ DiskDatabase::DiskDatabase(){
                 }
                 
             } catch (invalid_argument e) {
-                cerr << "Something is wrong with the folders" << endl;
+                cerr << "1. Something is wrong with the folders" << endl;
             }
             entry = readdir(dir);
         }
@@ -60,7 +60,7 @@ bool DiskDatabase::add_newsgroup(string ng_name) {
                 return false;
             }
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "2.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -87,7 +87,7 @@ bool DiskDatabase::delete_newsgroup(unsigned int id_nbr){
                 return remove((path + id).c_str()) == 0;
             }
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "3.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -136,17 +136,17 @@ bool DiskDatabase::delete_newsgroup(unsigned int id_nbr){
                         }
                         file.close();
                         Article a = Article(title,author,text);
-                        p.second.add_article(a);
+                        p.second.add_article(a_id,a);
                         
                     } catch (invalid_argument) {
-                        cerr << "Something is wrong with the files" << endl;
+                        cerr << "4.Something is wrong with the files" << endl;
                     }
                 }
                 p.first = true;
                 return p;
             }
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "5.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -179,7 +179,7 @@ bool DiskDatabase::add_article(unsigned int nbr, const Article& a) {
             }
             
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "6.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -215,7 +215,7 @@ bool DiskDatabase::delete_article(unsigned int ng_nbr, unsigned int a_nbr) {
                 return remove((/*ng_path + */id).c_str()) == 0;
             }
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "7.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -244,7 +244,7 @@ vector<pair<int,string>> DiskDatabase::list_newsgroup(){
             ngs.push_back(p);
             
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "8.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -271,7 +271,7 @@ vector<pair<int,string>> DiskDatabase::list_articles(unsigned int ng_nbr) {
                 ng_path = path + id + "/";
             }
         } catch (invalid_argument e) {
-            cerr << "Something is wrong with the folders" << endl;
+            cerr << "9.Something is wrong with the folders" << endl;
         }
         entry = readdir(dir);
     }
@@ -294,7 +294,7 @@ vector<pair<int,string>> DiskDatabase::list_articles(unsigned int ng_nbr) {
                 p.second = art_name;
                 a_list.push_back(p);
             } catch (invalid_argument e) {
-                cerr << "Something is wrong with the folders" << endl;
+                cerr << "10.Something is wrong with the folders" << endl;
             }
             entry = readdir(ng_dir);
         }

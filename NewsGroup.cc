@@ -55,4 +55,8 @@ bool NewsGroup::delete_article(unsigned int nbr){
     return false;
 }
 
+bool NewsGroup::add_article(unsigned int id, Article a){
+    return articles.emplace(id,a).second;
+}
+
 
