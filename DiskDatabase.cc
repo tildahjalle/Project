@@ -14,7 +14,7 @@
 using namespace std;
 
 DiskDatabase::DiskDatabase(){
-    string path = root +"/"
+    string path = root +"/";
     auto dir = opendir(path.c_str());
     groupnbr = 0;
     if (dir == nullptr) {
@@ -113,13 +113,37 @@ bool DiskDatabase::delete_newsgroup(unsigned int id_nbr){
             unsigned int ng_id = stoi(id.substr(0,pos));
             if (ng_id == id_nbr) {
                 string ng_name = id.substr(pos+1,string::npos);
-                /*p.second = NewsGroup(ng_name); //loopa igen alla newsGroup
-                vector<pair<int,string>> arts = list_articles(ng_id);
-                for (pair p:arts) {
-                    p.second.add_article(p.second);
+                p.second = NewsGroup(ng_name); //loopa igen alla newsGroup
+                auto ng_dir = opendir((path+id+"/").c_str());
+                if (dir == nullptr) {
+                    return p;
+                }
+                auto ng_entry = readdir(ng_dir);
+                while (ng_entry!= nullptr) {
+                    try {
+                        string art_id = ng_entry->d_name;
+                        auto pos = id.find_first_of(" ");
+                        unsigned int a_id = stoi(art_id.substr(0,pos));
+                        string title = art_id.substr(pos+1,string::npos);
+                        ifstream file(art_id);
+                        string author;
+                        getline(file,author);
+                        string text;
+                        while (file) {
+                            string tmp;
+                            getline(file,author);
+                            text += tmp;
+                        }
+                        file.close();
+                        Article a = Article(title,author,text);
+                        p.second.add_article(a);
+                        
+                    } catch (invalid_argument) {
+                        cerr << "Something is wrong with the files" << endl;
+                    }
                 }
                 p.first = true;
-                return p;*/
+                return p;
             }
         } catch (invalid_argument e) {
             cerr << "Something is wrong with the folders" << endl;
