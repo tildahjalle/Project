@@ -14,7 +14,8 @@
 using namespace std;
 
 DiskDatabase::DiskDatabase(){
-    auto dir = opendir(root.c_str());
+    string path = root +"/"
+    auto dir = opendir(path.c_str());
     groupnbr = 0;
     if (dir == nullptr) {
         mkdir(root.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
