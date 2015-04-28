@@ -23,9 +23,8 @@ pair<bool,Article> NewsGroup::get_article(unsigned int nbr) const {
     
 }
 
-vector<Article> NewsGroup::get_articles() const {
-  //kvar att implementera, gör en dummy för att det ska kompilera
-  return vector<Article>();   
+map<int,Article> NewsGroup::get_articles() const {
+  return articles;   
 }
 
 bool NewsGroup::add_article(Article a) {

@@ -14,7 +14,7 @@ using namespace std;
 
 Article::Article() {};
 
-Article::Article(string a, string t, string txt/*, unsigned int nbr*/) : author(a), title(t), text(txt) /*,id(nbr)*/{
+Article::Article(string t, string a, string txt/*, unsigned int nbr*/) : author(a), title(t), text(txt) /*,id(nbr)*/{
     //id= ++count;
 }
 

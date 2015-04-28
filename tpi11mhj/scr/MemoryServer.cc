@@ -78,15 +78,11 @@ int main(int argc, char* argv[]){
                         
                     case p::COM_LIST_ART:
                         if(database.get_newsgroup(message.intargs[0]).first != false){
-                            int count = 0;
-                            for(auto article : database.get_newsgroup(message.intargs[0]).second.get_articles()){
-                                intargs.push_back(count);
-                                stringargs.push_back(article.getTitle());
-                                stringargs.push_back(article.getAuthor());
-                                stringargs.push_back(article.getText());
-                                ++count;
-                            }
-                            Message(p::ANS_LIST_ART, p::ANS_ACK, intargs,stringargs).transmit(*conn);
+			  for(auto article : database.get_newsgroup(message.intargs[0]).second.get_articles()){
+                                intargs.push_back(article.first);
+                                stringargs.push_back(article.second.getTitle());
+			  }
+                            Message(p::ANS_LIST_ART, p::ANS_ACK, intargs, stringargs).transmit(*conn);
                         } else{
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_LIST_ART, p::ANS_NAK, intargs).transmit(*conn);
@@ -127,7 +123,7 @@ int main(int argc, char* argv[]){
                                 Message(p::ANS_DELETE_ART, p::ANS_ACK).transmit(*conn);
                             } else {
                                 intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
-                                Message(p::ANS_CREATE_ART,p::ANS_NAK,intargs);
+                                Message(p::ANS_DELETE_ART,p::ANS_NAK,intargs).transmit(*conn);
                             }
                         }
                         break;
@@ -135,19 +131,24 @@ int main(int argc, char* argv[]){
                         
                     case p::COM_GET_ART:
                         //Group does not exist
+		      cout << "get article startad" << endl;
                         if(database.get_newsgroup(message.intargs[0]).first == false){
+			  cout << "if" << endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_GET_ART, p::ANS_NAK, intargs).transmit(*conn);
                             //Article does not exist
                         }else if(database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).first==false){
+			  cout << "elseif " << endl;
                             intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
                             Message(p::ANS_GET_ART, p::ANS_NAK, intargs).transmit(*conn);
                             //All is well
                         } else{
+			  cout << "else " << endl;
                             Article a = database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).second;
                             stringargs.push_back(a.getTitle());
                             stringargs.push_back(a.getAuthor());
                             stringargs.push_back(a.getText());
+			    Message(p::ANS_GET_ART, p::ANS_ACK, intargs, stringargs).transmit(*conn);
                         }
                         break;
                 }
