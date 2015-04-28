@@ -29,9 +29,9 @@ vector<Article> NewsGroup::get_articles() const {
 }
 
 bool NewsGroup::add_article(Article a) {
-    articles.emplace(count,a);
-    count += 1;
-    return true;
+  bool status =articles.emplace(count,a).second;
+  count += 1;
+  return status;
 }
 
 bool NewsGroup::delete_article(unsigned int nbr){

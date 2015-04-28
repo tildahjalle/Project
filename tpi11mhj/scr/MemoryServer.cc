@@ -97,17 +97,20 @@ int main(int argc, char* argv[]){
                         
                         
                     case p::COM_CREATE_ART:
-                        //Var skapas artiklar?
-                        if(database.get_newsgroup(message.intargs[0]).first == false){
+		      std::cout<< "skapa artikel mottaget" << std::endl;
+		      if((database.get_newsgroup(message.intargs[0])).first == false){
+			cout << "if" << std::endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_DELETE_ART, p::ANS_NAK, intargs).transmit(*conn);
                         }else{
-                            Article a = Article(stringargs[0], stringargs[1], stringargs[2]);
+			cout << "else" << endl;
+                            Article a = Article(message.stringargs[0], message.stringargs[1], message.stringargs[2]);
+			    std::cout << "skapat artikel:" << message.stringargs[0] << ": " << message.stringargs[1] << ": " << message.stringargs[2] << std::endl;
                             if (database.add_article(message.intargs[0],a)) {
-                                Message(p::ANS_CREATE_ART, p::ANS_ACK);
+			      Message(p::ANS_CREATE_ART, p::ANS_ACK).transmit(*conn);
                             } else {
                                 intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
-                                Message(p::ANS_CREATE_ART,p::ANS_NAK,intargs);
+                                Message(p::ANS_CREATE_ART,p::ANS_NAK,intargs).transmit(*conn);
                             }
                             
                         }
