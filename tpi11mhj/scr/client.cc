@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
                         Message mh = Message(Protocol::COM_LIST_NG);
                         mh.transmit(conn);
                         mh = Message(conn);
-                        for(int i = 0; i < mh.stringargs.size(); ++i){
+                        for(unsigned int i = 0; i < mh.stringargs.size(); ++i){
                             cout << mh.intargs[i+1] << ". " << mh.stringargs[i] << endl;
                         }
                     }else if(str == "Articles"){
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
                             }else if(mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST){
                                 cout << "The article does not exist" << endl;
                             }else if(mh.ack == Protocol::ANS_ACK){
-                                for(int i = 0; i < mh.intargs.size(); i+3){
+                                for(unsigned int i = 0; i < mh.intargs.size(); i+=3){
                                     cout << to_string(mh.intargs[(i/3)]) + "." + " " + mh.stringargs[i] + " From: " + mh.stringargs[i+1] << endl;
                                 }
                             }else{

@@ -95,6 +95,7 @@ void Message::transmit(Connection& conn){
         switch (command){
                 // COM_LIST_NG needs no parameters
             case Protocol::COM_CREATE_NG:
+                cout << " COM_LIST_NG" << endl;
                 writeString(conn,stringargs[0]);
                 break;
             case Protocol::COM_DELETE_NG:
@@ -128,6 +129,7 @@ void Message::writeNbr(const Connection& conn, int value) {
     conn.write((value >> 16) & 0xFF);
     conn.write((value >> 8)	 & 0xFF);
     conn.write(value & 0xFF);
+    cout << " writenbr Complete" << endl;
 }
 
 //read an int from connection conn
@@ -143,8 +145,10 @@ int Message::readNbr(const Connection& conn) {
 string Message::readString(const Connection& conn) {
     int stringlength = readNbr(conn);
     string s;
+    cout << "stringlength: " << stringlength << endl;
     for(int i = 0; i < stringlength; i++){
         s += conn.read();
+        cout << "Conn.read nbr: " << i << endl;
     }
     return s;
 }
@@ -152,7 +156,11 @@ string Message::readString(const Connection& conn) {
 //write a string to connection conn
 void Message::writeString(const Connection& conn,std::string s){
     conn.write(Protocol::PAR_STRING);
-    conn.write(s.length());
+    auto value = s.length();
+    conn.write((value >> 24) & 0xFF);
+    conn.write((value >> 16) & 0xFF);
+    conn.write((value >> 8)	 & 0xFF);
+    conn.write(value & 0xFF);
     for(char c : s){
         conn.write(c);
     }
