@@ -129,7 +129,7 @@ void Message::writeNbr(const Connection& conn, int value) {
     conn.write((value >> 16) & 0xFF);
     conn.write((value >> 8)	 & 0xFF);
     conn.write(value & 0xFF);
-    cout << " writenbr Complete" << endl;
+    /*cout << " writenbr Complete" << endl;*/
 }
 
 //read an int from connection conn
@@ -145,10 +145,10 @@ int Message::readNbr(const Connection& conn) {
 string Message::readString(const Connection& conn) {
     int stringlength = readNbr(conn);
     string s;
-    cout << "stringlength: " << stringlength << endl;
+    /*cout << "stringlength: " << stringlength << endl;*/
     for(int i = 0; i < stringlength; i++){
         s += conn.read();
-        cout << "Conn.read nbr: " << i << endl;
+        /*cout << "Conn.read nbr: " << i << endl;*/
     }
     return s;
 }

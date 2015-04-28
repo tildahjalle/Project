@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
                             mh = Message(conn);
                             if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
                                 cout << "The newsgroup does not exist" << endl;
-                            }else if(mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST){
+                            }else if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST*/){
                                 cout << "The article does not exist" << endl;
                             }else if(mh.ack == Protocol::ANS_ACK){
                                 for(unsigned int i = 0; i < mh.intargs.size(); i+=3){
@@ -132,11 +132,11 @@ int main(int argc, char* argv[]) {
                             vector<string> stringargs;
                             vector<int> intargs;
                             stringargs.push_back(name);
-                            
                             Message mh = Message(Protocol::COM_CREATE_NG, 0,intargs, stringargs);
                             mh.transmit(conn);
                             mh = Message(conn);
-                            if(mh.intargs[0] == Protocol::ERR_NG_ALREADY_EXISTS){
+                            //cout << "before segmentaionfault: " << (mh.intargs).size() << endl;
+                            if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_NG_ALREADY_EXISTS*/){
                                 cout << "The Newsgroup already exists." << endl;
                             }else{
                                 cout << "The newsgroup has been succesfully added." << endl;
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
                             Message mh = Message(Protocol::COM_CREATE_ART, 0, intargs, stringargs);
                             mh.transmit(conn);
                             mh = Message(conn);
-                            if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){ 
+                            if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST*/){
                                 cout << "The Newsgroup does not exist." << endl;
                             }else{
                                 cout << "The article has been succesfully added." << endl;
@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
                             Message mh = Message(Protocol::COM_DELETE_NG, 0, intargs);
                             mh.transmit(conn);
                             mh = Message(conn);
-                            if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
+                            if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST*/){
                                 cout << "The Newsgroup does not exist." << endl;
                             }else{
                                 cout << "The newsgroup has been succesfully deleted." << endl;
@@ -231,9 +231,9 @@ int main(int argc, char* argv[]) {
                         Message mh = Message(Protocol::COM_DELETE_NG, 0, intargs);
                         mh.transmit(conn);
                         mh = Message(conn);
-                        if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
+                        if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST*/){
                             cout << "The newsgroup does not exist." << endl;
-                        }else if(mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST){
+                        }else if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST*/){
                             cout << "The article does not exist." << endl;
                         }else{
                             cout << mh.stringargs[0] + "   " + mh.stringargs[1] << endl;

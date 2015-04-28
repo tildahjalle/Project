@@ -28,7 +28,7 @@ public:
     /*const*/ std::pair<bool,NewsGroup>/*&*/ get_newsgroup(unsigned int) const;
     
     //Adds Article to group nbr int. Return success.
-    bool add_article(unsigned int, const Article&);
+    bool add_article(unsigned int,std::string, const Article&);
     
     //Delete article
     bool delete_article(unsigned int, unsigned int);

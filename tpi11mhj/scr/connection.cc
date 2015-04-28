@@ -104,9 +104,9 @@ void Connection::write(unsigned char ch) const {
 		error("Write attempted on a not properly opened connection");
 	}
 	int count = ::write(my_socket, &ch, 1);
-    std::cout << " write to socket complete: " << ch <<std::endl;
+    /*std::cout << " write to socket complete: " << ch <<std::endl;*/
 	if (count != 1) {
-        std::cout << "count == 1 " << std::endl;
+        /*std::cout << "count == 1 " << std::endl;*/
 		throw ConnectionClosedException();
 	}
 }

@@ -41,6 +41,7 @@ int main(int argc, char* argv[]){
                 vector<string> stringargs;
                 vector<pair<int,string>> ngs;
                 vector<pair<int,string>> arts;
+                pair<bool, NewsGroup> pa;
                 switch (message.command){
                     case p::COM_LIST_NG:
                         //skapa en lista på lämpligt vis, skapa ett message av detta, transmitta det.
@@ -74,8 +75,11 @@ int main(int argc, char* argv[]){
                         }
                         break;
                     case p::COM_LIST_ART:
+                        cout << "COM_LIST_ART" << endl;
                         if(database.get_newsgroup(message.intargs[0]).first != false){
+                            cout << "found newsgroup" << endl;
                             arts = database.list_articles(message.intargs[0]);
+                            cout << "returned list f articles" << endl;
                             for (pair<int,string> pa:arts) {
                                 intargs.push_back(pa.first);
                                 stringargs.push_back(pa.second);
@@ -91,16 +95,17 @@ int main(int argc, char* argv[]){
                         }
                         break;
                     case p::COM_CREATE_ART:
-                        if(database.get_newsgroup(message.intargs[0]).first == false){
+                        pa = database.get_newsgroup(message.intargs[0]);
+                        if(pa.first == false){
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_DELETE_ART, p::ANS_NAK, intargs).transmit(*conn);
                         } else {
-                            Article a = Article(stringargs[0],stringargs[1],stringargs[2]);
-                            if (database.add_article(message.intargs[0],a)) {
-                                Message(p::ANS_CREATE_ART,p::ANS_ACK);
+                            Article a = Article(message.stringargs[0],message.stringargs[1],message.stringargs[2]);
+                            if (database.add_article(message.intargs[0], pa.second.get_name(),a)) {
+                                Message(p::ANS_CREATE_ART,p::ANS_ACK).transmit(*conn);
                             } else {
                                 intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
-                                Message(p::ANS_CREATE_ART,p::ANS_NAK,intargs);
+                                Message(p::ANS_CREATE_ART,p::ANS_NAK,intargs).transmit(*conn);
                             }
                         }
                         //Var skapas artiklar?
