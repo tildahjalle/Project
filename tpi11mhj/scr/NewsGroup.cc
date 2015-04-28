@@ -13,14 +13,16 @@ string NewsGroup::get_name() const { return name; }
 
 
 pair<bool,Article> NewsGroup::get_article(unsigned int nbr) const {
-    pair<bool,Article> p;
-    p.first = false;
-    if (articles.find(nbr) != articles.end()) {
-        p.first = true;
-    }
+  pair<bool,Article> p;
+  if (articles.find(nbr) != articles.end()) {
+    p.first = true;
     p.second = articles.at(nbr);
-    return p;
-    
+  }else{
+    p.first = false;
+}
+
+  return p;
+  
 }
 
 map<int,Article> NewsGroup::get_articles() const {

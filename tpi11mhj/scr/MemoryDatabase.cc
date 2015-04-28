@@ -22,11 +22,13 @@ bool MemoryDatabase::delete_newsgroup(unsigned int groupnbr){
 }
 
 std::pair<bool,NewsGroup> MemoryDatabase::get_newsgroup(unsigned int groupnbr) const{
-    std::pair<bool,NewsGroup> p(false,database.at(groupnbr));
-    if (database.find(groupnbr) != database.end()) {
-        p.first = true;
-    }
-    return p;
+  std::pair<bool,NewsGroup> p;
+  if (database.find(groupnbr) != database.end()) {
+    p = std::pair<bool,NewsGroup>(true,database.at(groupnbr));
+  } else{
+    p = std::pair<bool,NewsGroup>(false,NewsGroup());
+  }
+  return p;
 }
 
 bool MemoryDatabase::add_article(unsigned int groupnbr, const Article& a){
