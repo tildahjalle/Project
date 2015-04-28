@@ -16,7 +16,7 @@ public:
     std::string get_name() const;
     
     std::pair<bool,Article> get_article(unsigned int) const;
-    std::vector<Article> get_articles() const;
+    std::map<int,Article> get_articles() const;
     bool add_article(Article a);
     bool delete_article(unsigned int);
     bool add_article(unsigned int,Article);
