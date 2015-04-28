@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
                             help();
                         }else{
                             vector<int> intargs;
-                            intargs.push_back(stoi(IDNbr)); /
+                            intargs.push_back(stoi(IDNbr)); 
                             Message mh = Message(Protocol::COM_LIST_ART, 0, intargs);
                             mh.transmit(conn);
                             mh = Message(conn);
