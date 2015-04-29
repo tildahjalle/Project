@@ -39,12 +39,12 @@ client: libclientserver.a message.o
 
 # Standard clean
 clean:
-	rm -f *.o libclientserver.a
+	rm -f *.o $(PROGS)
 	cd ../bin; rm -f $(PROGS);
 
 install:
 	rm -f *.o
-	mv $(PROGS) ../bin
+	mv $(PROGS) cd ../bin
 
 # Generate dependencies in *.d files
 %.d: %.cc

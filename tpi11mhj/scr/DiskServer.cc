@@ -4,7 +4,7 @@
 #include "server.h"
 #include "protocol.h"
 #include <stdexcept>
-#include "ConnectionClosedException.h"
+#include "connectionclosedexception.h"
 
 using namespace std;
 using p = Protocol;
@@ -94,11 +94,8 @@ int main(int argc, char* argv[]){
                     case p::COM_CREATE_ART:
                         pa = database.get_newsgroup(message.intargs[0]);
                         if(pa.first == false){
-                            cout << "newsgroup does not exists" << endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
-                            cout << "error push backed" << endl;
                             Message(p::ANS_CREATE_ART, p::ANS_NAK, intargs).transmit(*conn);
-                            cout << "message created" << endl;
                         } else {
                             Article a = Article(message.stringargs[0],message.stringargs[1],message.stringargs[2]);
                             if (database.add_article(message.intargs[0], pa.second.get_name(),a)) {
@@ -112,15 +109,12 @@ int main(int argc, char* argv[]){
                         break;
                     case p::COM_DELETE_ART:
                         if(database.get_newsgroup(message.intargs[0]).first == false){
-                            cout << "newsgroup does not exist" << endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_DELETE_ART, p::ANS_NAK, intargs).transmit(*conn);
                         }else if(database.delete_article(message.intargs[0],message.intargs[1]) == false){
-                            cout << "did not remove" << endl;
                             intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
                             Message(p::ANS_DELETE_ART, p::ANS_NAK, intargs).transmit(*conn);	
                         }else{
-                            cout << "article removed" << endl;
                             Message(p::ANS_DELETE_ART,p::ANS_ACK).transmit(*conn);
                         }
                         break;

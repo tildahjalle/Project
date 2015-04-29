@@ -17,7 +17,6 @@ using std::endl;
 Message::Message(){};
 Message::Message(Connection& conn){
     command = conn.read();
-    cout << "Command Recieved!: " << static_cast<int>(command) << endl;
     char ch = 0;
     while(ch != Protocol::COM_END && ch !=  Protocol::ANS_END){
         ch = conn.read();
@@ -95,7 +94,6 @@ void Message::transmit(Connection& conn){
         switch (command){
                 // COM_LIST_NG needs no parameters
             case Protocol::COM_CREATE_NG:
-                cout << " COM_LIST_NG" << endl;
                 writeString(conn,stringargs[0]);
                 break;
             case Protocol::COM_DELETE_NG:

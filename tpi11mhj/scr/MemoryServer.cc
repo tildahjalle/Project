@@ -38,7 +38,6 @@ int main(int argc, char* argv[]){
         if (conn != nullptr) {
             vector<int> intargs = vector<int>();
             vector<string> stringargs = vector<string>();
-            std::cout << "Message recieved!" << std::endl;
             try {
                 Message message=Message(*conn);
                 
@@ -78,15 +77,12 @@ int main(int argc, char* argv[]){
                         
                     case p::COM_LIST_ART:
                         if(database.get_newsgroup(message.intargs[0]).first != false){
-			  cout << "if" << endl;
 			  for(auto article : database.get_newsgroup(message.intargs[0]).second.get_articles()){
-			    cout << "for" << endl;
                                 intargs.push_back(article.first);
                                 stringargs.push_back(article.second.getTitle());
 			  }
                             Message(p::ANS_LIST_ART, p::ANS_ACK, intargs, stringargs).transmit(*conn);
                         } else{
-			  cout <<  "else" << endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_LIST_ART, p::ANS_NAK, intargs).transmit(*conn);
                         }
@@ -96,15 +92,11 @@ int main(int argc, char* argv[]){
                         
                         
                     case p::COM_CREATE_ART:
-		      std::cout<< "skapa artikel mottaget" << std::endl;
 		      if((database.get_newsgroup(message.intargs[0])).first == false){
-			cout << "if" << std::endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_CREATE_ART, p::ANS_NAK, intargs).transmit(*conn);
                         }else{
-			cout << "else" << endl;
                             Article a = Article(message.stringargs[0], message.stringargs[1], message.stringargs[2]);
-			    std::cout << "skapat artikel:" << message.stringargs[0] << ": " << message.stringargs[1] << ": " << message.stringargs[2] << std::endl;
                             if (database.add_article(message.intargs[0],a)) {
 			      Message(p::ANS_CREATE_ART, p::ANS_ACK).transmit(*conn);
                             } else {
@@ -115,17 +107,13 @@ int main(int argc, char* argv[]){
                         }
                         break;
                     case p::COM_DELETE_ART:
-		      cout << "delete_art mottaget " << endl;
                         if(database.get_newsgroup(message.intargs[0]).first == false){
-			  cout << "if" << endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_DELETE_ART, p::ANS_NAK, intargs).transmit(*conn);
                         }else if(database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).first==false){
-			  cout << "elseif " << endl; 
                             intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
                             Message(p::ANS_DELETE_ART, p::ANS_NAK, intargs).transmit(*conn);
                         }else{
-			  cout << "dubbelelse " << endl;
                             if (database.delete_article(message.intargs[0], message.intargs[1])){
                                 Message(p::ANS_DELETE_ART, p::ANS_ACK).transmit(*conn);
                             } else {
@@ -138,19 +126,15 @@ int main(int argc, char* argv[]){
                         
                     case p::COM_GET_ART:
                         //Group does not exist
-		      cout << "get article startad" << endl;
                         if(database.get_newsgroup(message.intargs[0]).first == false){
-			  cout << "if" << endl;
                             intargs.push_back(p::ERR_NG_DOES_NOT_EXIST);
                             Message(p::ANS_GET_ART, p::ANS_NAK, intargs).transmit(*conn);
                             //Article does not exist
                         }else if(database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).first==false){
-			  cout << "elseif " << endl;
                             intargs.push_back(p::ERR_ART_DOES_NOT_EXIST);
                             Message(p::ANS_GET_ART, p::ANS_NAK, intargs).transmit(*conn);
                             //All is well
                         } else{
-			  cout << "else " << endl;
                             Article a = database.get_newsgroup(message.intargs[0]).second.get_article(message.intargs[1]).second;
                             stringargs.push_back(a.getTitle());
                             stringargs.push_back(a.getAuthor());

@@ -11,32 +11,36 @@
 using namespace std;
 
 void help(){
-    cout << "Your command is invalid, you can use the following commands:" << endl;
+    cout << "You can use the following commands:" << endl;
     cout << "List Newsgroups" << endl;
     cout << "Create Newsgroup <name>" << endl;
     cout << "Delete Newsgroup <IDnumber>" << endl;
     cout << "List Articles <IDNumber>" << endl;
-    cout << "Create Article <IDNumber> <title> <author> <text>" << endl;
+    cout << "Create Article <IDNumber> <title> <author>" << endl;
     cout << "Delete Article <IDNumber> <IDNumber>" << endl;
     cout << "Read Article <IDNumber> <IDNumber>" << endl;
+    cout << "Help" << endl;
     cout << "Exit" << endl;
 }
 
 int switchStr(string s){
-    if (s == "List") {
+    if (s == "List" || s == "L") {
         return 1;
     }
-    if (s == "Create") {
+    if (s == "Create" || s == "C") {
         return 2;
     }
-    if (s == "Delete") {
+    if (s == "Delete" || s == "D") {
         return 3;
     }
-    if (s == "Read") {
+    if (s == "Read" || s == "R") {
         return 4;
     }
-    if (s == "Exit") {
+    if (s == "Exit" || s == "E") {
         return 5;
+    }
+    if (s == "Help" || s == "H") {
+        return 6;
     } else {
         return -1;
     }
@@ -67,30 +71,30 @@ int main(int argc, char* argv[]) {
     cout << "Create Newsgroup <name>" << endl;
     cout << "Delete Newsgroup <IDnumber>" << endl;
     cout << "List Articles <IDNumber>" << endl;
-    cout << "Create Article <IDNumber> <title> <author> <text>" << endl;
+    cout << "Create Article <IDNumber> <title> <author>" << endl;
     cout << "Delete Article <IDNumber> <IDNumber>" << endl;
     cout << "Read Article <IDNumber> <IDNumber>" << endl;
+    cout << "Help" << endl;
     cout << "Exit" << endl;
     
-    
-    
+    /*string line;*/
     string str;
     int arg;
-    while(cin >> str){
+    while(/*get(cin,line)*/cin >> str){
         try{
-            arg = switchStr(str);
+            arg = /*switchStr(line)*/ switchStr(str);
             switch(arg){
                 case 1:
                 {
                     cin >> str;
-                    if(str == "Newsgroups"){
+                    if(str == "Newsgroups" || str == "N"){
                         Message mh = Message(Protocol::COM_LIST_NG);
                         mh.transmit(conn);
                         mh = Message(conn);
                         for(unsigned int i = 0; i < mh.stringargs.size(); ++i){
                             cout << mh.intargs[i+1] << ". " << mh.stringargs[i] << endl;
                         }
-                    }else if(str == "Articles"){
+                    }else if(str == "Articles" || str == "A"){
                         string IDNbr;
                         IDNbr = "-1";
                         cin >> IDNbr;
@@ -98,14 +102,14 @@ int main(int argc, char* argv[]) {
                             help();
                         }else{
                             vector<int> intargs;
-                            intargs.push_back(stoi(IDNbr)); 
+                            intargs.push_back(stoi(IDNbr));
                             Message mh = Message(Protocol::COM_LIST_ART, 0, intargs);
                             mh.transmit(conn);
                             mh = Message(conn);
-                            if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
+                            if(mh.ack == Protocol::ANS_NAK){
                                 cout << "The newsgroup does not exist" << endl;
-                            }else if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST*/){
-                                cout << "The article does not exist" << endl;
+                                //}else if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST*/){
+                                // cout << "The article does not exist" << endl;
                             }else if(mh.ack == Protocol::ANS_ACK){
                                 for(unsigned int i = 0; i < mh.intargs.size(); i+=3){
                                     cout << to_string(mh.intargs[(i/3)]) + "." + " " + mh.stringargs[i] + " From: " + mh.stringargs[i+1] << endl;
@@ -122,7 +126,7 @@ int main(int argc, char* argv[]) {
                 case 2:
                 {
                     cin >> str;
-                    if(str == "Newsgroup"){
+                    if(str == "Newsgroup" || str == "N"){
                         string name;
                         name = "-1";
                         cin >> name;
@@ -142,7 +146,7 @@ int main(int argc, char* argv[]) {
                                 cout << "The newsgroup has been succesfully added." << endl;
                             }
                         }
-                    }else if(str == "Article"){
+                    }else if(str == "Article" || str == "A"){
                         string IDNbr, title, author, text;
                         IDNbr = title = author = text = "-1";
                         cin >> IDNbr >> title >> author >> text;
@@ -173,7 +177,7 @@ int main(int argc, char* argv[]) {
                 case 3:
                 {
                     cin >> str;
-                    if(str == "Newsgroup"){
+                    if(str == "Newsgroup" || str == "N"){
                         string IDNbr;
                         IDNbr = "-1";
                         cin >> IDNbr;
@@ -191,7 +195,7 @@ int main(int argc, char* argv[]) {
                                 cout << "The newsgroup has been succesfully deleted." << endl;
                             }
                         }
-                    }else if(str == "Article"){
+                    }else if(str == "Article" || str == "A"){
                         string IDNbrN, IDNbrA;
                         IDNbrN = IDNbrA = "-1";
                         cin >> IDNbrN >> IDNbrA;
@@ -201,13 +205,15 @@ int main(int argc, char* argv[]) {
                             vector<int> intargs;
                             intargs.push_back(stoi(IDNbrN));
                             intargs.push_back(stoi(IDNbrA));
-                            Message mh = Message(Protocol::COM_DELETE_NG, 0, intargs);
+                            Message mh = Message(Protocol::COM_DELETE_ART, 0, intargs);
                             mh.transmit(conn);
                             mh = Message(conn);
-                            if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
-                                cout << "The newsgroup does not exist." << endl;
-                            }else if(mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST){
-                                cout << "The article does not exist." << endl;
+                            if((mh.intargs).size() != 0){
+                                if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
+                                    cout << "The newsgroup does not exist." << endl;
+                                }else if(mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST){
+                                    cout << "The article does not exist." << endl;
+                                }
                             }else{
                                 cout << "The article has been succesfully deleted." << endl;
                             }
@@ -228,13 +234,15 @@ int main(int argc, char* argv[]) {
                         vector<int> intargs;
                         intargs.push_back(stoi(IDNbrN));
                         intargs.push_back(stoi(IDNbrA));
-                        Message mh = Message(Protocol::COM_DELETE_NG, 0, intargs);
+                        Message mh = Message(Protocol::COM_GET_ART, 0, intargs);
                         mh.transmit(conn);
                         mh = Message(conn);
-                        if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST*/){
-                            cout << "The newsgroup does not exist." << endl;
-                        }else if((mh.intargs).size() != 0/*mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST*/){
-                            cout << "The article does not exist." << endl;
+                        if((mh.intargs).size() != 0){
+                            if(mh.intargs[0] == Protocol::ERR_NG_DOES_NOT_EXIST){
+                                cout << "The newsgroup does not exist." << endl;
+                            }else if(mh.intargs[0] == Protocol::ERR_ART_DOES_NOT_EXIST){
+                                cout << "The article does not exist." << endl;
+                            }
                         }else{
                             cout << mh.stringargs[0] + "   " + mh.stringargs[1] << endl;
                             cout << mh.stringargs[2] << endl;
@@ -245,6 +253,11 @@ int main(int argc, char* argv[]) {
                 case 5:
                 {
                     exit(1);
+                }
+                    break;
+                case 6:
+                {
+                    help();
                 }
                     break;
                 case -1:
