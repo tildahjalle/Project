@@ -16,7 +16,7 @@ CXXFLAGS += -g
 #CXXFLAGS =  -stdlib=libc++
 #CPPFLAGS =  -stdlib=libc++
 #CXXFLAGS += -stdlib=libc++
-PROGS = libclientserver.a DiskServer MemoryServer client
+PROGS =  DiskServer MemoryServer client #libclientserver.a
 
 all: $(PROGS)
 
@@ -44,7 +44,7 @@ clean:
 
 install:
 	rm -f *.o
-	mv $(PROGS) cd ../bin
+	mv $(PROGS)  /usr/local/bin
 
 # Generate dependencies in *.d files
 %.d: %.cc
